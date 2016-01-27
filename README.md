@@ -14,6 +14,17 @@
 ##Customizing##
 1.QQMap.init
 
+| 参数        |类型 |备注           |
+| ------------- |:-------------:|:-------------:|
+| container     |必传 | 设置放置地图的元素，使用jq式选择器，例如：QQMap.init("#map",...) |
+| center      |必传 | 设置地图展示的中心点，传入一个包含经纬度的数组。例如：center:[39.916527, 116.397128] |
+| zoom      |选传 | 初始化地图缩放级别，默认为级别0。 |
+| backgroundColor |选传 | 用作地图的背景颜色。当用户进行平移时，如果尚未载入图块，则显示此颜色。仅在地图初始化时，才能设置此选项。|
+| panControl      |选传 | 地图平移控件，若为false则不显示平移控件。|
+| zoomControl      |选传 | 地图缩放控件，若为false则不显示缩放控件。|
+| scaleControl |选传 | 地图缩放控件，若为false则不显示缩放控件。|
+
+
 2.QQMap.setMarker
 
 3.QQMap.setOverlay
