@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .map {
+        width: 1000px;
+        height: 500px;
+        margin: 0 auto;
+        background: #eeeeee;
+    }
+</style>
+<body>
+<div class="map"></div>
+
+<script src="http://map.qq.com/api/js?v=2.exp&key=5LIBZ-WGHWO-I2LWD-SXGRK-G2D6J-5LB6O&libraries=geometry,convertor"></script>
+<script src="qqMap.js"></script>
+<script>
+    var map = QQMap.init(".map", {
+        center: [39.916527, 116.397128],
+        zoom: 12
+    });
+/*    var marker = QQMap.setMarker({
+        position: [39.916527, 116.397128],
+        url: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png',
+        size: [150, 150],
+        origin: [0, 0],
+        anchor: [75, 75],
+        scaleSize: [150, 150],
+        shape: {
+            coords: [0, 0, 50],
+            type: "circle"
+        }
+    });*/
+
+    var overlay = QQMap.setOverlay({
+        content: "<span>哈哈哈</span>",
+        position: [39.916527, 116.397128],
+        origin: [200, 200],
+        zIndex: 999,
+        style: "width:100px"
+    });
+
+    var polyLine = QQMap.setPolyLine({
+        path: [
+            [39.916527, 116.387128],
+            [39.926627, 116.397158],
+            [39.936528, 116.397428]
+        ],
+        strokeColor:"#fab919",
+        strokeWeight:10,
+        strokeDashStyle:"dash"
+    });
+
+    var infoWindow = QQMap.setInfoWindow({
+        content: "<span>喵咪咪</span>",
+        position: [39.916527, 116.397128]
+    })
+
+</script>
+</body>
+</html>
