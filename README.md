@@ -146,7 +146,7 @@
     polyLine.on("click",function(){
        alert(1)
     });
-    polyLine.off();//qqMap里marker只能全部解除绑定，无法指定解除某个绑定的事件
+    polyLine.off();//qqMap里polyLine只能全部解除绑定，无法指定解除某个绑定的事件
 
 5.QQMap.setInfoWindow
 
