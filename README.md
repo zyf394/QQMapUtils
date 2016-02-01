@@ -132,6 +132,8 @@
 | ------------- |:-------------:|:-------------:|:-------------:|
 | options.path     |必传 | | path是折线上的点集合，必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组。|
 | options.clickable      |选传 |true | 设置折线是否可点击。|
+| options.cursor      |选传 | "pointer" | 设置折线是否可点击。|
+| options.strokeColor      |选传 | "#2691ea" | 设置折线是否可点击。|
 | options.strokeWeight      |选传 | 1 | 设置折线粗细。 |
 | options.strokeDashStyle | 选传 | solid |设置折线形式，只有solid（实线）、dash（虚线）两种。|
 | options.visible      | 选传|true | 设置折线是否可见。|
