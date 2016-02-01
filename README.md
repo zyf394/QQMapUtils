@@ -13,7 +13,8 @@
     });
 ##如何配置？##
 1.QQMap.init(selector,options)
-初始化地图，只能给一个元素放置地图。以下所有方法
+
+初始化地图，只能给一个元素放置地图。以下所有方法必须在执行init后才能生效。
 
 | 参数        |类型 |默认|备注           |
 | ------------- |:-------------:|:-------------:|:-------------:|
@@ -37,6 +38,7 @@
     });
 
 2.QQMap.setMarker(options)
+
 在地图上设置自定义图标
 
 | 参数        |类型 |默认|备注           |
@@ -83,6 +85,7 @@
     marker.off();//qqMap里marker只能全部解除绑定，无法指定解除某个绑定的事件
     
 3.QQMap.setOverlay(options)
+
 在地图上设置自定义浮层
 
 | 参数        |类型 |默认|备注           |
@@ -122,6 +125,7 @@
     var overlayDom = overlay.getDom();
     
 4.QQMap.setPolyLine(options)
+
 在地图上设置折线
 
 | 参数        |类型 |默认|备注           |
@@ -148,12 +152,88 @@
     });
     polyLine.off();//qqMap里polyLine只能全部解除绑定，无法指定解除某个绑定的事件
 
-5.QQMap.setInfoWindow
+5.QQMap.setInfoWindow(options)
 
-6.QQMap.setZoom
+在地图上设置自定义弹窗
 
-7.QQMap.setCenter
+| 参数        |类型 |默认|备注           |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| options.content     |必传 | | content是弹窗的内容元素。|
+| options.position      |必传 | | position是弹窗在地图中经纬度位置。|
 
-8.QQMap.setMapBounds
+例如：
 
-9.QQMap.translate
+    var infoWindow = QQMap.setInfoWindow({
+        content: "<span>我是弹窗</span>",
+        position: [39.916527, 116.397128]
+    })
+
+6.QQMap.setZoom(num)
+
+设置地图缩放级别
+
+例如：
+
+    QQMap.setZoom(20)
+    
+7.QQMap.setCenter(lat,lng)
+
+设置地图中心坐标。（lat：纬度，lng：经度）
+
+| 参数        |类型 |默认|备注           |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| lat     |必传 | | 纬度。|
+| lng      |必传 | | 经度。|
+
+例如：
+
+    QQMap.setCenter(40,50)
+
+8.QQMap.setBoundsPoint(lat,lng)
+
+设置地图显示边界内包含的点，需配合QQMap.setMapBounds使用。（lat：纬度，lng：经度）
+
+| 参数        |类型 |默认|备注           |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| lat     |必传 | | 纬度。|
+| lng      |必传 | | 经度。|
+
+例如：
+
+    QQMap.setBoundsPoint(40,50)
+    
+9.QQMap.setMapBounds()
+
+设置地图显示边界。需先使用QQMap.setBoundsPoint(lat,lng)设置边界内包含的点后才能生效。
+
+例如：
+
+    var path = [
+        [39.916527, 116.387128],
+        [39.926627, 116.397158],
+        [39.936528, 116.397428]
+    ];
+    for(var i =0 ;i<path.length;i++){
+        QQMap.setBoundsPoint(path[i][0],path[i][1])
+    }
+    QQMap.setMapBounds();
+    
+10.QQMap.translate(options)
+
+将其他地图服务商的坐标批量转换成腾讯地图经纬度坐标。
+
+| 参数        |类型 |默认|备注           |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| position     |必传 | | 原始坐标位置。|
+| type      |必传 | | type用于说明是哪个服务商的坐标。 type的可选值为 1：gps经纬度；2：搜狗经纬度；3：百度经纬度；4：mapbar经纬度；5：google经纬度；6：搜狗墨卡托。|
+| callBack      |选传 | | 转换完成后回调函数，转换后的结果保存在参数data中。|
+
+例如：
+
+    QQMap.translate({
+        position:[39.916527, 116.387128],
+        type:1,
+        callBack:function(data){
+            console.log(data)
+        }
+    })
