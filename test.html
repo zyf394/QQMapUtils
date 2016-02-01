@@ -22,23 +22,24 @@
         center: [39.916527, 116.397128],
         zoom: 12
     });
-/*    var marker = QQMap.setMarker({
+    var marker = QQMap.setMarker({
         position: [39.916527, 116.397128],
         url: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png',
         size: [150, 150],
         origin: [0, 0],
         anchor: [75, 75],
         scaleSize: [150, 150],
+        zIndex:9999,
         shape: {
             coords: [0, 0, 50],
             type: "circle"
         }
-    });*/
+    });
 
     var overlay = QQMap.setOverlay({
-        content: "<span>哈哈哈</span>",
+        content: "<span>我是浮层</span>",
         position: [39.916527, 116.397128],
-        origin: [200, 200],
+        offSet: [200, 200],
         zIndex: 999,
         style: "width:100px"
     });
@@ -49,14 +50,35 @@
             [39.926627, 116.397158],
             [39.936528, 116.397428]
         ],
+        clickable:false,
         strokeColor:"#fab919",
         strokeWeight:10,
-        strokeDashStyle:"dash"
+        strokeDashStyle:"dash",
+        visible:true,
+        zIndex:10000
     });
 
     var infoWindow = QQMap.setInfoWindow({
-        content: "<span>喵咪咪</span>",
+        content: "<span>我是弹窗</span>",
         position: [39.916527, 116.397128]
+    });
+
+    var path = [
+        [39.916527, 116.387128],
+        [39.926627, 116.397158],
+        [39.936528, 116.397428]
+    ];
+    for(var i =0 ;i<path.length;i++){
+        QQMap.setBoundsPoint(path[i][0],path[i][1])
+    }
+    QQMap.setMapBounds();
+
+    QQMap.translate({
+        position:[39.916527, 116.387128],
+        type:1,
+        callBack:function(data){
+            console.log(data)
+        }
     })
 
 </script>

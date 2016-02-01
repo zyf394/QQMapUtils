@@ -4,6 +4,8 @@
 var QQMap = {
     map: null,
 
+    LatLngBounds:new qq.maps.LatLngBounds(),
+
     /*初始化地图*/
     init: function (container, options) {
         var mapContainer;
@@ -48,6 +50,7 @@ var QQMap = {
         position = new qq.maps.LatLng(options.position[0], options.position[1]);
         marker = new qq.maps.Marker({
             position: position,
+            zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
             map: this.map
         });
 
@@ -117,8 +120,8 @@ var QQMap = {
             //设置自定义Dom元素的style样式
             divStyle = this.div.style;
 
-            offsetLeft = options.origin !== undefined ? options.origin[0] : 0;//如果不设置左偏移量，则左偏移量为0
-            offsetTop = options.origin !== undefined ? options.origin[1] : 0;//如果不设置上偏移量，则上偏移量为0
+            offsetLeft = options.offSet !== undefined ? options.offSet[0] : 0;//如果不设置左偏移量，则左偏移量为0
+            offsetTop = options.offSet !== undefined ? options.offSet[1] : 0;//如果不设置上偏移量，则上偏移量为0
 
             divStyle.position = "absolute";
             divStyle.left = pixel.x + offsetLeft + "px";
@@ -167,22 +170,22 @@ var QQMap = {
             listener;
 
         /*所有坐标数组转换为qqMap坐标对象,path必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组*/
-        pathLatLng = options.path.map(function(item,index){
+        pathLatLng = options.path.map(function (item, index) {
             var lat = item[0],
                 lng = item[1];
-            return new qq.maps.LatLng(lat,lng)
+            return new qq.maps.LatLng(lat, lng)
         });
 
         /*绘制折线*/
         polyLine = new qq.maps.Polyline({
             path: pathLatLng,//必传
-            clickable:options.clickable !== undefined ? options.clickable : true,//选传
-            cursor:options.cursor !== undefined ? options.cursor : "pointer",//选传
+            clickable: options.clickable !== undefined ? options.clickable : true,//选传
+            cursor: options.cursor !== undefined ? options.cursor : "pointer",//选传
             strokeColor: options.strokeColor !== undefined ? options.strokeColor : "#2691ea",//选传，"#2691ea"为qq地图默认折线颜色；可以设置折线的透明度:strokeColor: new qq.maps.Color(0, 0, 0, 0.5),
-            strokeWeight: options.strokeWeight !== undefined ? options.strokeWeight : 1 ,//选传
-            strokeDashStyle:options.strokeDashStyle !== undefined ? options.strokeDashStyle : "solid",//选传
-            visible:options.visible !== undefined ? options.visible : true,//选传
-            zIndex:options.zIndex !== undefined ? options.zIndex : 0,//选传
+            strokeWeight: options.strokeWeight !== undefined ? options.strokeWeight : 1,//选传
+            strokeDashStyle: options.strokeDashStyle !== undefined ? options.strokeDashStyle : "solid",//选传
+            visible: options.visible !== undefined ? options.visible : true,//选传
+            zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
             map: me.map
         });
 
@@ -200,7 +203,7 @@ var QQMap = {
     },
 
     /*在地图上绘制信息框*/
-    setInfoWindow: function(options) {
+    setInfoWindow: function (options) {
         var me = this,
             position,
             info;
@@ -221,19 +224,28 @@ var QQMap = {
     },
 
     /*设置地图中心点位置*/
-    setCenter: function (latlng) {
-        this.map.panTo(latlng);
+    setCenter: function (lat,lng) {
+        this.map.panTo(new qq.maps.LatLng(lat,lng));
+    },
+
+    /*设置地图显示边界内包含的点*/
+    setBoundsPoint:function(lat,lng){
+        var qqLatLng = new qq.maps.LatLng(lat,lng);
+        this.LatLngBounds.extend(qqLatLng);
     },
 
     /*设置地图显示边界*/
-    setMapBounds: function (latlng) {
-        this.map.fitBounds(latlng);
+    setMapBounds: function () {
+        var me = this;
+        me.map.fitBounds(me.LatLngBounds);
     },
 
     /*将坐标转换为火星坐标*/
-    translate: function (position, callback) {
-        qq.maps.convertor.translate(position, 1, function (data) {
-            callback(data);
+    translate: function (options) {
+        qq.maps.convertor.translate(new qq.maps.LatLng(options.position[0], options.position[1]), options.type, function (data) {
+            if(typeof  options.callBack == "function"){
+                options.callBack(data);
+            }
         });
     }
 };
