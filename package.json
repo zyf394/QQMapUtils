@@ -1,0 +1,23 @@
+{
+  "name": "qqMap",
+  "version": "1.0.0",
+  "description": "utils for qqmap",
+  "main": "qqMap.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "author": "didife",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zyf394/QQMapUtils.git"
+  },
+  "keywords": [
+    "didi",
+    "qqMap"
+  ]
+}

@@ -3,38 +3,25 @@
  */
 var QQMap = {
     map: null,
-
-    LatLngBounds:new qq.maps.LatLngBounds(),
-
+    
     /*初始化地图*/
     init: function (container, options) {
         var mapContainer;
         //选择元素
         if (typeof container == "string") {
             mapContainer = document.querySelector(container)
+        }else {
+            mapContainer = container;
         }
-        //配置可选项
-        this.map = new qq.maps.Map(mapContainer, {
-            // 地图的中心地理坐标（必传参数）。
-            center: new qq.maps.LatLng(options.center[0], options.center[1]),
 
-            //初始化地图缩放级别（选传参数，如不传此参数，强制初始化缩放为0）
-            zoom: options.zoom == undefined ? 0 : options.zoom,
+        //简化center的操作
+        if(options.center){
+            options.center = new qq.maps.LatLng(options.center[0], options.center[1])
+        }
 
-            //用作地图 div 的背景颜色。当用户进行平移时，如果尚未载入图块，则显示此颜色。
-            //仅在地图初始化时，才能设置此选项（选传参数）
-            backgroundColor: options.backgroundColor,
-
-            //地图平移控件，若为false则不显示平移控件（选传参数）
-            panControl: options.panControl,
-
-            //地图缩放控件，若为false则不显示缩放控件（选传参数）
-            zoomControl: options.zoomControl,
-
-            //地图比例尺控件，若为false则不显示比例尺控件（选传参数）
-            scaleControl: options.scaleControl
-
-        });
+        this.map = new qq.maps.Map(mapContainer, options);
+        
+        this.LatLngBounds = new qq.maps.LatLngBounds();
 
         return this.map
     },
@@ -43,29 +30,40 @@ var QQMap = {
     setMarker: function (options) {
         var position,
             marker,
+            size,
+            origin,
+            anchor,
+            scaleSize,
             markerShape,
             listener;
+
+        //设置必填项
+        this.logError(options,["position","url"]);
 
         /*必传参数，设置图标的位置和所在的地图*/
         position = new qq.maps.LatLng(options.position[0], options.position[1]);
         marker = new qq.maps.Marker({
             position: position,
             zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
-            map: this.map
+            map: options.map || this.map
         });
+        size = options.size ? new qq.maps.Size(options.size[0], options.size[1]) : null;
+        origin = options.origin ? new qq.maps.Point(options.origin[0], options.origin[1]) : null;
+        anchor = options.anchor ? new qq.maps.Point(options.anchor[0], options.anchor[1]) : null;
+        scaleSize = options.scaleSize ? new qq.maps.Size(options.scaleSize[0], options.scaleSize[1]) : null;
 
         /*选传参数，设置Marker自定义图标的属性*/
         var markerIcon = new qq.maps.MarkerImage(
             options.url,//(必传) url是图标的自定义图片链接，，
-            new qq.maps.Size(options.size[0], options.size[1]) || undefined,//(可选) size是图标尺寸，该尺寸为显示图标的实际尺寸
-            new qq.maps.Point(options.origin[0], options.origin[1]) || undefined,//(可选) origin是切图坐标，该坐标是相对于图片左上角默认为（0,0）的相对像素坐标
-            new qq.maps.Point(options.anchor[0], options.anchor[1]) || undefined,//(可选) anchor是锚点坐标，描述经纬度点对应图标中的位置
-            new qq.maps.Size(options.scaleSize[0], options.scaleSize[1]) || undefined//(可选) 缩放尺寸，用于拉伸或缩小原图片时使用，该尺寸是用来改变整个图片的尺寸。
+            size,//(可选) size是图标尺寸，该尺寸为显示图标的实际尺寸
+            origin,//(可选) origin是切图坐标，该坐标是相对于图片左上角默认为（0,0）的相对像素坐标
+            anchor,//(可选) anchor是锚点坐标，描述经纬度点对应图标中的位置
+            scaleSize//(可选) 缩放尺寸，用于拉伸或缩小原图片时使用，该尺寸是用来改变整个图片的尺寸。
         );
         marker.setIcon(markerIcon);
 
         /*选传参数，设置Marker的响应范围*/
-        if (options.shape != undefined) {
+        if (typeof options.shape !== "undefined") {
             markerShape = new qq.maps.MarkerShape(options.shape.coords, options.shape.type);
             marker.setShape(markerShape);
         }
@@ -156,7 +154,7 @@ var QQMap = {
 
         instance = new Overlay();
 
-        instance.setMap(this.map);
+        instance.setMap(options.map || this.map);
 
         return instance;
 
@@ -173,6 +171,11 @@ var QQMap = {
         pathLatLng = options.path.map(function (item, index) {
             var lat = item[0],
                 lng = item[1];
+            if(typeof lat !== "number" || typeof lng !== "number"){
+                console.error("传入polyline的坐标必须是number类型.");
+                return;
+            }
+
             return new qq.maps.LatLng(lat, lng)
         });
 
@@ -186,7 +189,7 @@ var QQMap = {
             strokeDashStyle: options.strokeDashStyle !== undefined ? options.strokeDashStyle : "solid",//选传
             visible: options.visible !== undefined ? options.visible : true,//选传
             zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
-            map: me.map
+            map: options.map || me.map
         });
 
         /*绑定事件*/
@@ -207,25 +210,33 @@ var QQMap = {
         var me = this,
             position,
             info;
+        me.logError(options,["position"]);
 
         position = new qq.maps.LatLng(options.position[0], options.position[1]);
         info = new qq.maps.InfoWindow({
-            map: me.map
+            map: options.map || me.map,
+            content: options.content || "",
+            position: position,
+            zIndex: options.zIndex || 0,
+            visible: options.visible || true
+
         });
         info.open();
-        info.setContent(options.content);
-        info.setPosition(position);
 
         return info;
     },
     /*设置地图缩放比例*/
-    setZoom: function (index) {
-        this.map.zoomTo(index);
+    setZoom: function (options) {
+        var map = options.map || this.map;
+        map.zoomTo(options.zoom);
+        return this;
     },
 
     /*设置地图中心点位置*/
-    setCenter: function (lat,lng) {
-        this.map.panTo(new qq.maps.LatLng(lat,lng));
+    setCenter: function (options) {
+        var map = options.map || this.map;
+        map.panTo(new qq.maps.LatLng(options.center[0],options.center[1]));
+        return this;
     },
 
     /*设置地图显示边界内包含的点*/
@@ -235,9 +246,10 @@ var QQMap = {
     },
 
     /*设置地图显示边界*/
-    setMapBounds: function () {
-        var me = this;
-        me.map.fitBounds(me.LatLngBounds);
+    setMapBounds: function (options) {
+        var me = this,
+            map = (options && options.map) || me.map;
+        map.fitBounds(me.LatLngBounds);
     },
 
     /*将坐标转换为火星坐标*/
@@ -247,6 +259,19 @@ var QQMap = {
                 options.callBack(data);
             }
         });
+    },
+
+    logError:function(options,params){
+        if(Array.isArray(params)){
+            for(var i = 0 ;i < params.length ; i++){
+                if(!(params[i] in options) && typeof options[params[i]] === "undefined"){
+                    console.error("'"+ params[i] +"'是必传参数.");
+                    return;
+                }
+            }
+        }else {
+            console.error("'params'是必传参数.");
+        }
     }
 };
 

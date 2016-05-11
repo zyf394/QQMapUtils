@@ -50,6 +50,7 @@
 | options.anchor      | 选传|[0,0] | anchor是锚点坐标，描述经纬度点对应图标中的位置。|
 | options.scaleSize     | 选传 |[0,0] | 缩放尺寸，用于拉伸或缩小原图片时使用，该尺寸是用来改变整个图片的尺寸。|
 | options.shape | 选传| | 设置Marker的响应范围。|
+| options.map | 选传| | 设置Marker在哪个地图上展示。|
 
 例如：
 
@@ -66,7 +67,8 @@
             //当type为"circle"时，coords的形式为[x1,y1,r]，其中x1，y1是圆中心点，r是圆的半径；
             //当type为"poly"时，coords的形式为[x1,y1,x2,y2...xn,yn]，其中每一对x，y表示一个多边形的顶点位置；
             //当type为"rect"时，coords的形式为[x1,y1,x2,y2]，x1，y1表示矩形左上角顶点位置，x2，y2表示矩形右下角
-        }
+        }，
+        map:map
     });
     
 绑定/移除事件：
@@ -95,6 +97,7 @@
 | options.offSet      |选传 | [0,0] | offSet是浮层相对于position的偏移量。 |
 | options.zIndex | 选传 |  |zIndex是浮层在地图上的z-index层级。|
 | options.style      | 选传| | style是浮层的自定义样式。|
+| options.map | 选传| | 设置Marker在哪个地图上展示。|
 
 例如：
 
@@ -103,7 +106,8 @@
         position: [39.916527, 116.397128],
         offSet: [200, 200],
         zIndex: 999,
-        style: "width:100px"
+        style: "width:100px"，
+        map:map
     });
 
 绑定/移除事件：
@@ -138,6 +142,7 @@
 | options.strokeDashStyle | 选传 | solid |设置折线形式，只有solid（实线）、dash（虚线）两种。|
 | options.visible      | 选传|true | 设置折线是否可见。|
 | options.zIndex      | 选传|0 | 设置折线的z-index层级。|
+| options.map | 选传| | 设置Marker在哪个地图上展示。|
 
 绑定/移除事件：
 
@@ -162,6 +167,7 @@
 | ------------- |:-------------:|:-------------:|:-------------:|
 | options.content     |必传 | | content是弹窗的内容元素。|
 | options.position      |必传 | | position是弹窗在地图中经纬度位置。|
+| options.map | 选传| | 设置Marker在哪个地图上展示。|
 
 例如：
 
@@ -178,18 +184,21 @@
 
     QQMap.setZoom(20)
     
-7.QQMap.setCenter(lat,lng)
+7.QQMap.setCenter(options)
 
 设置地图中心坐标。（lat：纬度，lng：经度）
 
 | 参数        |类型 |默认|备注           |
 | ------------- |:-------------:|:-------------:|:-------------:|
-| lat     |必传 | | 纬度。|
-| lng      |必传 | | 经度。|
+| options.center     |必传 | | 经纬度。|
+| options.map | 选传| | 设置Marker在哪个地图上展示。|
 
 例如：
 
-    QQMap.setCenter(40,50)
+    QQMap.setCenter({
+        center:[39.10123,106.12311],
+        map:map
+    })
 
 8.QQMap.setBoundsPoint(lat,lng)
 
@@ -239,3 +248,8 @@
             console.log(data)
         }
     })
+
+##如何测试？##
+
+    npm run test
+    

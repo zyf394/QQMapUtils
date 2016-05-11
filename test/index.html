@@ -16,7 +16,7 @@
 <div class="map"></div>
 
 <script src="http://map.qq.com/api/js?v=2.exp&key=5LIBZ-WGHWO-I2LWD-SXGRK-G2D6J-5LB6O&libraries=geometry,convertor"></script>
-<script src="qqMap.js"></script>
+<script src="../src/qqMap.min.js"></script>
 <script>
     var map = QQMap.init(".map", {
         center: [39.916527, 116.397128],
@@ -35,7 +35,6 @@
             type: "circle"
         }
     });
-
     var overlay = QQMap.setOverlay({
         content: "<span>我是浮层</span>",
         position: [39.916527, 116.397128],
@@ -43,7 +42,6 @@
         zIndex: 999,
         style: "width:100px"
     });
-
     var polyLine = QQMap.setPolyLine({
         path: [
             [39.916527, 116.387128],
@@ -57,12 +55,10 @@
         visible:true,
         zIndex:10000
     });
-
     var infoWindow = QQMap.setInfoWindow({
         content: "<span>我是弹窗</span>",
         position: [39.916527, 116.397128]
     });
-
     var path = [
         [39.916527, 116.387128],
         [39.926627, 116.397158],
@@ -72,7 +68,6 @@
         QQMap.setBoundsPoint(path[i][0],path[i][1])
     }
     QQMap.setMapBounds();
-
     QQMap.translate({
         position:[39.916527, 116.387128],
         type:1,
@@ -80,7 +75,6 @@
             console.log(data)
         }
     })
-
 </script>
 </body>
 </html>
