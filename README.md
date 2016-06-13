@@ -6,7 +6,7 @@
 
 示例：
 
-    <script src="http://map.qq.com/api/js?v=2.exp&key=5LIBZ-WGHWO-I2LWD-SXGRK-G2D6J-5LB6O&libraries=geometry,convertor"></script>
+    <script src="http://map.qq.com/api/js?v=2.exp&key=yourKey&libraries=geometry,convertor"></script>
     <script src="qqMap.js"></script>
     
 2. 引入腾讯地图之后，用QQMapUtils初始化地图配置。
