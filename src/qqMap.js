@@ -3,7 +3,9 @@
  */
 var QQMap = {
     map: null,
-    
+
+    LatLngBounds : new qq.maps.LatLngBounds(),
+
     /*初始化地图*/
     init: function (container, options) {
         var mapContainer;
@@ -21,7 +23,6 @@ var QQMap = {
 
         this.map = new qq.maps.Map(mapContainer, options);
         
-        this.LatLngBounds = new qq.maps.LatLngBounds();
 
         return this.map
     },
@@ -44,7 +45,7 @@ var QQMap = {
         position = new qq.maps.LatLng(options.position[0], options.position[1]);
         marker = new qq.maps.Marker({
             position: position,
-            zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
+            zIndex: options.zIndex !== void(0) ? options.zIndex : 0,//选传
             map: options.map || this.map
         });
         size = options.size ? new qq.maps.Size(options.size[0], options.size[1]) : null;
@@ -63,7 +64,7 @@ var QQMap = {
         marker.setIcon(markerIcon);
 
         /*选传参数，设置Marker的响应范围*/
-        if (typeof options.shape !== "undefined") {
+        if (options.shape !== void(0)) {
             markerShape = new qq.maps.MarkerShape(options.shape.coords, options.shape.type);
             marker.setShape(markerShape);
         }
@@ -118,8 +119,8 @@ var QQMap = {
             //设置自定义Dom元素的style样式
             divStyle = this.div.style;
 
-            offsetLeft = options.offSet !== undefined ? options.offSet[0] : 0;//如果不设置左偏移量，则左偏移量为0
-            offsetTop = options.offSet !== undefined ? options.offSet[1] : 0;//如果不设置上偏移量，则上偏移量为0
+            offsetLeft = options.offSet !== void(0) ? options.offSet[0] : 0;//如果不设置左偏移量，则左偏移量为0
+            offsetTop = options.offSet !== void(0) ? options.offSet[1] : 0;//如果不设置上偏移量，则上偏移量为0
 
             divStyle.position = "absolute";
             divStyle.left = pixel.x + offsetLeft + "px";
@@ -182,13 +183,13 @@ var QQMap = {
         /*绘制折线*/
         polyLine = new qq.maps.Polyline({
             path: pathLatLng,//必传
-            clickable: options.clickable !== undefined ? options.clickable : true,//选传
-            cursor: options.cursor !== undefined ? options.cursor : "pointer",//选传
-            strokeColor: options.strokeColor !== undefined ? options.strokeColor : "#2691ea",//选传，"#2691ea"为qq地图默认折线颜色；可以设置折线的透明度:strokeColor: new qq.maps.Color(0, 0, 0, 0.5),
-            strokeWeight: options.strokeWeight !== undefined ? options.strokeWeight : 1,//选传
-            strokeDashStyle: options.strokeDashStyle !== undefined ? options.strokeDashStyle : "solid",//选传
-            visible: options.visible !== undefined ? options.visible : true,//选传
-            zIndex: options.zIndex !== undefined ? options.zIndex : 0,//选传
+            clickable: options.clickable !== void(0) ? options.clickable : true,//选传
+            cursor: options.cursor !== void(0) ? options.cursor : "pointer",//选传
+            strokeColor: options.strokeColor !== void(0) ? options.strokeColor : "#2691ea",//选传，"#2691ea"为qq地图默认折线颜色；可以设置折线的透明度:strokeColor: new qq.maps.Color(0, 0, 0, 0.5),
+            strokeWeight: options.strokeWeight !== void(0) ? options.strokeWeight : 1,//选传
+            strokeDashStyle: options.strokeDashStyle !== void(0) ? options.strokeDashStyle : "solid",//选传
+            visible: options.visible !== void(0) ? options.visible : true,//选传
+            zIndex: options.zIndex !== void(0) ? options.zIndex : 0,//选传
             map: options.map || me.map
         });
 
@@ -205,23 +206,64 @@ var QQMap = {
         return polyLine;
     },
 
+    /*在地图上绘制多边形*/
+    setPolygon: function (options) {
+        var me = this,
+            polygon,
+            pathLatLng,
+            listener;
+
+        /*所有坐标数组转换为qqMap坐标对象,path必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组*/
+        pathLatLng = options.path.map(function (item, index) {
+            var lat = item[0],
+                lng = item[1];
+            if(typeof lat !== "number" || typeof lng !== "number"){
+                console.error("传入polygon的坐标必须是number类型.");
+                return;
+            }
+
+            return new qq.maps.LatLng(lat, lng)
+        });
+
+        /*绘制折线*/
+        polygon = new qq.maps.Polygon({
+            path: pathLatLng,//必传
+            clickable: options.clickable !== void(0) ? options.clickable : true,//选传
+            cursor: options.cursor !== void(0) ? options.cursor : "pointer",//选传
+            fillColor: options.fillColor !== void(0) ? options.fillColor : "#2691ea",//选传，"#2691ea"为qq地图默认折线颜色；可以设置折线的透明度:strokeColor: new qq.maps.Color(0, 0, 0, 0.5),
+            strokeColor: options.strokeColor !== void(0) ? options.strokeColor : "#2691ea",//选传，"#2691ea"为qq地图默认折线颜色；可以设置折线的透明度:strokeColor: new qq.maps.Color(0, 0, 0, 0.5),
+            strokeWeight:options.strokeWeight !== void(0) ?　options.strokeWeight : 1,
+            visible: options.visible !== void(0) ? options.visible : true,//选传
+            zIndex: options.zIndex !== void(0) ? options.zIndex : 0,//选传
+            map: options.map || me.map
+        });
+
+        /*绑定事件*/
+        polygon.on = function (type, callBack) {
+            listener = qq.maps.event.addListener(polyLine, type, callBack);
+        };
+
+        /*移除事件*/
+        polygon.off = function () {
+            qq.maps.event.removeListener(listener);
+        };
+
+        return polygon;
+    },
+
     /*在地图上绘制信息框*/
     setInfoWindow: function (options) {
         var me = this,
             position,
             info;
-        me.logError(options,["position"]);
 
         position = new qq.maps.LatLng(options.position[0], options.position[1]);
         info = new qq.maps.InfoWindow({
-            map: options.map || me.map,
-            content: options.content || "",
-            position: position,
-            zIndex: options.zIndex || 0,
-            visible: options.visible || true
-
+            map: me.map
         });
         info.open();
+        info.setContent(options.content);
+        info.setPosition(position);
 
         return info;
     },
@@ -264,7 +306,7 @@ var QQMap = {
     logError:function(options,params){
         if(Array.isArray(params)){
             for(var i = 0 ;i < params.length ; i++){
-                if(!(params[i] in options) && typeof options[params[i]] === "undefined"){
+                if(!(params[i] in options) && options[params[i]] === void(0)){
                     console.error("'"+ params[i] +"'是必传参数.");
                     return;
                 }
@@ -275,8 +317,10 @@ var QQMap = {
     }
 };
 
-if (typeof module != 'undefined' && module.exports) {
+if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+    define(function () {
+        return QQMap;
+    });
+} else if (typeof module !== 'undefined' && module.exports) {
     module.exports = QQMap;
-} else {
-    window.QQMap = QQMap;
 }

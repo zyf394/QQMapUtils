@@ -1,18 +1,20 @@
 #QQMapUtils#
 一个简化腾讯地图操作的小工具。对腾讯地图常用的几个api做了统一风格的封装，去掉了一些api里面不常用的属性和方法，方便开发者调用。
 ##如何开始？##
-1.使用QQMapUtils之前，需要在你的html中引用腾讯地图，然后再引入qqMap.js。
+1. 使用QQMapUtils之前，需要在你的html中引用腾讯地图，然后再引入qqMap.js。
 
     <script src="http://map.qq.com/api/js?v=2.exp&key=5LIBZ-WGHWO-I2LWD-SXGRK-G2D6J-5LB6O&libraries=geometry,convertor"></script>
     <script src="qqMap.js"></script>
-2.引入腾讯地图之后，用QQMapUtils初始化地图配置。
+    
+2. 引入腾讯地图之后，用QQMapUtils初始化地图配置。
 
     var map = QQMap.init(".map", {
         center: [39.916527, 116.397128],
         zoom: 12
     });
+
 ##如何配置？##
-1.QQMap.init(selector,options)
+1. QQMap.init(selector,options)
 
 初始化地图，只能给一个元素放置地图。以下所有方法必须在执行init后才能生效。
 
@@ -37,7 +39,7 @@
         scaleControl:false
     });
 
-2.QQMap.setMarker(options)
+2. QQMap.setMarker(options)
 
 在地图上设置自定义图标
 
@@ -86,7 +88,7 @@
     });
     marker.off();//qqMap里marker只能全部解除绑定，无法指定解除某个绑定的事件
     
-3.QQMap.setOverlay(options)
+3. QQMap.setOverlay(options)
 
 在地图上设置自定义浮层
 
@@ -128,21 +130,21 @@
     overlay.off("click",clickFunction);
     var overlayDom = overlay.getDom();
     
-4.QQMap.setPolyLine(options)
+4. QQMap.setPolyLine(options)
 
-在地图上设置折线
+在地图上设置多边形
 
 | 参数        |类型 |默认|备注           |
 | ------------- |:-------------:|:-------------:|:-------------:|
-| options.path     |必传 | | path是折线上的点集合，必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组。|
-| options.clickable      |选传 |true | 设置折线是否可点击。|
+| options.path     |必传 | | path是多边形上的点集合，必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组。|
+| options.clickable      |选传 |true | 设置多边形是否可点击。|
 | options.cursor      |选传 | "pointer" | 设置鼠标样式。|
-| options.strokeColor      |选传 | "#2691ea" | 设置折线颜色。|
-| options.strokeWeight      |选传 | 1 | 设置折线粗细。 |
-| options.strokeDashStyle | 选传 | solid |设置折线形式，只有solid（实线）、dash（虚线）两种。|
+| options.fillColor      |选传 | "#2691ea" | 设置多边形颜色。|
+| options.strokeColor | 选传 | solid |设置多边形描边颜色。|
+| options.strokeWeight      |选传 | 1 | 设置多边形描边粗细。 |
 | options.visible      | 选传|true | 设置折线是否可见。|
 | options.zIndex      | 选传|0 | 设置折线的z-index层级。|
-| options.map | 选传| | 设置Marker在哪个地图上展示。|
+| options.map | 选传| | 设置折线在哪个地图上展示。|
 
 绑定/移除事件：
 
@@ -159,7 +161,38 @@
     });
     polyLine.off();//qqMap里polyLine只能全部解除绑定，无法指定解除某个绑定的事件
 
-5.QQMap.setInfoWindow(options)
+4. QQMap.setPolygon(options)
+
+在地图上设置折线
+
+| 参数        |类型 |默认|备注           |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| options.path     |必传 | | path是折线上的点集合，必须为[ [lat1,lng1], [lat2,lng2], [lat3,lng3]...]形式的二维数组。|
+| options.clickable      |选传 |true | 设置折线是否可点击。|
+| options.cursor      |选传 | "pointer" | 设置鼠标样式。|
+| options.strokeColor      |选传 | "#2691ea" | 设置折线颜色。|
+| options.strokeWeight      |选传 | 1 | 设置折线粗细。 |
+| options.strokeDashStyle | 选传 | solid |设置折线形式，只有solid（实线）、dash（虚线）两种。|
+| options.visible      | 选传|true | 设置折线是否可见。|
+| options.zIndex      | 选传|0 | 设置折线的z-index层级。|
+| options.map | 选传| | 设置多边形在哪个地图上展示。|
+
+绑定/移除事件：
+
+| 方法        |参数 |
+| ------------- |:-------------:|
+| .on(type,function)     |type：事件类型；function：事件触发后的回调函数 |
+| .off()      |此处无需传参数 |
+
+例如：
+
+    var polygon = QQMap.setPolygon(...);
+    polygon.on("click",function(){
+       alert(1)
+    });
+    polygon.off();//qqMap里polyLine只能全部解除绑定，无法指定解除某个绑定的事件
+    
+5. QQMap.setInfoWindow(options)
 
 在地图上设置自定义弹窗
 
@@ -176,7 +209,7 @@
         position: [39.916527, 116.397128]
     })
 
-6.QQMap.setZoom(num)
+6. QQMap.setZoom(num)
 
 设置地图缩放级别
 
@@ -184,7 +217,7 @@
 
     QQMap.setZoom(20)
     
-7.QQMap.setCenter(options)
+7. QQMap.setCenter(options)
 
 设置地图中心坐标。（lat：纬度，lng：经度）
 
@@ -200,7 +233,7 @@
         map:map
     })
 
-8.QQMap.setBoundsPoint(lat,lng)
+8. QQMap.setBoundsPoint(lat,lng)
 
 设置地图显示边界内包含的点，需配合QQMap.setMapBounds使用。（lat：纬度，lng：经度）
 
@@ -213,7 +246,7 @@
 
     QQMap.setBoundsPoint(40,50)
     
-9.QQMap.setMapBounds()
+9. QQMap.setMapBounds()
 
 设置地图显示边界。需先使用QQMap.setBoundsPoint(lat,lng)设置边界内包含的点后才能生效。
 
@@ -229,7 +262,7 @@
     }
     QQMap.setMapBounds();
     
-10.QQMap.translate(options)
+10. QQMap.translate(options)
 
 将其他地图服务商的坐标批量转换成腾讯地图经纬度坐标。
 
