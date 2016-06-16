@@ -4,6 +4,7 @@
   "description": "utils for qqmap",
   "main": "qqMap.js",
   "scripts": {
+    "build":"gulp build",
     "uglify": "gulp uglify",
     "test": "node server.js"
   },
