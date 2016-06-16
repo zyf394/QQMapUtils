@@ -4,13 +4,16 @@
   "description": "utils for qqmap",
   "main": "qqMap.js",
   "scripts": {
+    "uglify": "gulp uglify",
     "test": "node server.js"
   },
   "author": "didife",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.3"
   },
   "repository": {
     "type": "git",

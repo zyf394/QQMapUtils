@@ -3,8 +3,8 @@ var gulp = require('gulp'),
     rename = require('gulp-rename');
 
 gulp.task('uglify', function () {
-    return gulp.src('src/qqMap.js')
+    return gulp.src('lib/qqMap.js')
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
-        .pipe(gulp.dest('src/'));
+        .pipe(gulp.dest('lib/'));
 });

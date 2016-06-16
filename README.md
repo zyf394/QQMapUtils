@@ -293,3 +293,9 @@
 
     npm run test
     
+    
+##压缩##
+
+    npm run uglify
+    
+    
